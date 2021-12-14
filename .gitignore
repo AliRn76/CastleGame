@@ -1,0 +1,10 @@
+.venv/
+.idea/
+*.pyc
+**/migrations/**
+!**/migrations
+!**/migrations/__init__.py
+.secret_keys
+media/**
+!media
+db.sqlite3
