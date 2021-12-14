@@ -19,7 +19,7 @@ class ArcherClass(models.Model):
 class Archer(models.Model):
     id = models.BigAutoField(db_column='ID', primary_key=True)
     name = models.CharField(db_column='Name', max_length=63)
-    is_active = models.BooleanField(db_column='IsActive', default=True)
+    is_available = models.BooleanField(db_column='IsAvailable', default=False)
     date_created = models.DateField(db_column='DateCreated', auto_now_add=True)
     date_updated = models.DateField(db_column='DateUpdated', auto_now=True)
     archer_class_id = models.ForeignKey(ArcherClass, models.CASCADE, db_column='ArcherClassID')
@@ -43,6 +43,7 @@ class BoughtArcherSkins(models.Model):
     id = models.BigAutoField(db_column='ID', primary_key=True)
     user_id = models.ForeignKey(AUTH_USER_MODEL, models.CASCADE, db_column='UserID')
     archer_skins_id = models.ForeignKey(ArcherSkins, models.CASCADE, db_column='ArcherSkinsID')
+    is_active = models.BooleanField(db_column='IsActive', default=True)
     date_created = models.DateField(db_column='DateCreated', auto_now_add=True)
 
     class Meta:

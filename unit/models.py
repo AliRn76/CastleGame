@@ -41,6 +41,7 @@ class Unit(models.Model):
     hp = models.IntegerField(db_column='HP', default=0)
     damage = models.IntegerField(db_column='Damage', default=0)
     speed = models.IntegerField(db_column='Speed', default=0)
+    is_available = models.BooleanField(db_column='IsAvailable', default=False)
     movement_type = models.CharField(db_column='MovementType', max_length=15, choices=MovementType.choices)
     attack_type = models.CharField(db_column='AttackType', max_length=15, choices=AttackType.choices)
     target_type = models.CharField(db_column='TargetType', max_length=15, choices=TargetType.choices)
@@ -59,6 +60,7 @@ class UnitSkins(models.Model):
 
     id = models.BigAutoField(db_column='ID', primary_key=True)
     skin_name = models.CharField(db_column='SkinName', max_length=63)
+    is_available = models.BooleanField(db_column='IsAvailable', default=False)
     cost = models.PositiveIntegerField(db_column='Cost', default=0)
     cost_type = models.CharField(db_column='CostType', max_length=63, choices=CostType.choices, default=CostType.GOLD)
     date_created = models.DateField(db_column='DateCreated', auto_now_add=True)
@@ -72,6 +74,7 @@ class BoughtUnitSkin(models.Model):
     id = models.BigAutoField(db_column='ID', primary_key=True)
     user_id = models.ForeignKey(AUTH_USER_MODEL, models.CASCADE, db_column='UserID')
     unit_skin_id = models.ForeignKey(UnitSkins, models.CASCADE, db_column='UnitSkinID')
+    date_created = models.DateField(db_column='DateCreated', auto_now_add=True)
 
     class Meta:
         db_table = 'BoughtUnitSkin'

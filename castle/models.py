@@ -1,22 +1,27 @@
-# from django.db import models
-# from django.utils.translation import gettext_lazy as _
-# from config.settings import AUTH_USER_MODEL
-#
-#
-# class ArcherClass(models.Model):
-#     class ArcherClasses(models.TextChoices):
-#         DAMAGE = 'damage', _('Damage')
-#         ATTACK_SPEED = 'attack_speed', _('AttackSpeed')
-#         RANGE = 'range', _('Range')
-#         REGEN = 'regen', _('Regen')
-#
-#     id = models.BigAutoField(db_column='ID', primary_key=True)
-#     name = models.CharField(db_column='Name', choices=ArcherClasses, max_length=63)
-#
-#     class Meta:
-#         db_table = 'ArcherClass'
-#
-#
+from django.db import models
+from django.utils.translation import gettext_lazy as _
+from config.settings import AUTH_USER_MODEL
+
+
+class Border(models.Model):
+    id = models.BigAutoField(db_column='ID', primary_key=True)
+    name = models.CharField(db_column='Name', max_length=63)
+    is_available = models.BooleanField(db_column='IsAvailable', default=False)
+
+    class Meta:
+        db_table = 'Border'
+
+
+class UserBorders(models.Model):
+    id = models.BigAutoField(db_column='ID', primary_key=True)
+    user_id = models.ForeignKey(AUTH_USER_MODEL, models.CASCADE, db_column='UserID')
+    border_id = models.ForeignKey(Border, models.CASCADE, db_column='BorderID')
+    is_active = models.BooleanField(db_column='IsActive', default=True)
+    date_created = models.DateField(db_column='DateCreated', auto_now_add=True)
+
+    class Meta:
+        db_table = 'UserBorders'
+
 # class Archer(models.Model):
 #     id = models.BigAutoField(db_column='ID', primary_key=True)
 #     name = models.CharField(db_column='Name', max_length=63)
