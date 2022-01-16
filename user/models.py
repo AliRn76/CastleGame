@@ -12,10 +12,11 @@ from config.settings import AUTH_USER_MODEL
 
 class UserManager(BaseUserManager):
     def get_or_raise(self, *args, **kwargs):
+        queryset = super().get_queryset()
         try:
-            return super().get_queryset().get(*args, **kwargs)
-        except User.DoesNotExist:
-            raise APIException(detail='User Does Not Exist', code=status.HTTP_404_NOT_FOUND)
+            return queryset.get(*args, **kwargs)
+        except queryset.model.DoesNotExist:
+            raise APIException(detail=f'{queryset.model} Does Not Exist', code=status.HTTP_404_NOT_FOUND)
 
     def create_user(self, username, password=None):
         if not username:
@@ -67,7 +68,7 @@ class User(AbstractBaseUser):
     gold        = models.PositiveIntegerField(db_column='Gold', default=0)
     gem         = models.PositiveIntegerField(db_column='Gem', default=0)
     score       = models.PositiveIntegerField(db_column='Score', default=0)
-    icon        = models.ImageField(db_column='Icon', upload_to=icon_path, blank=True, null=True)
+    # icon        = models.ImageField(db_column='Icon', upload_to=icon_path, blank=True, null=True)
     region      = models.CharField(db_column='Region', max_length=255)
     username    = models.CharField(db_column='Username', max_length=63, unique=True)
     password    = models.CharField(db_column='Password', max_length=127, blank=True, null=True)

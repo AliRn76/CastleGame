@@ -50,3 +50,14 @@ class BoughtArcherSkins(models.Model):
         db_table = 'BoughtArcherSkins'
 
 
+# Using Django Channels (ws) for sending async data to users
+
+# Using Redis for channels broker & storing some little data
+
+# Using celery for the shared task on sending messages
+
+# Nginx for web server & reverse proxy
+
+# Deploying with Docker, Gunicorn, Daphne & ...
+
+# Monitoring with sentry
