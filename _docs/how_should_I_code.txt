@@ -1,0 +1,19 @@
+hame miran jelo ta be avalin creture i ke too rangeshon bood beresan, 
+
+baad behesh attack midan  va har attack ye time i dare ke too front bayad effect esh ejra beshe masalan 2 sec, man baad az 2 sec hp oon shakhs ro kam mikonm , dar vaghe age baad az 2 sec oon unit hanuz zende bood ya sare hamon jash bood va hich effect e miss ya dodge ya chizi nadasht bayad hp esh ro kam konm,
+
+pas chon dodge o miss o ina dare ham tooye back va ham tooye front be soorate movazi hesab mishe nmitonm ye meghdare darsadi bezarim bayad ye meghdare static bashe masalan har 3 ta attack baadish ro dodge mide
+
+zamin ro bayad be noghat kheily kochich taghsim kard ke unit ha toosh betonn harekat konn va har harekat masalan 0.1 sec tool mikeshe va in baes mishe ke too front tamiz dar biad (dar vaghe bayad in speed e 0.1 ro ba front tebghe ye algorithm i dar biarim)
+
+vaghti taraf dc shod va khast dobare bargarde hich niazi nist ke ma spell haye tooye hava ro ham bkhaim be user befrestim (shayadam ferestadam , chon bayad ham current position ro bedam va ham destination possition)
+
+front har 10 sec ye req be man mizane ke data ro check kone bbine fix e ya na --> oon chizi nemifreste man barash mifrestam ke tooye sanie 111(x) bazi in unit ha inja boodan va ... , hala Aya front mitone hesab bokone ke tooye sanie X bazi vaghean ina inja boodan ya na
+
+vaghti ye client mikhad action anjam bede , front aval be man req mide ke foloni mikhad in action ro anjam bede va man behesh migam ke w8 kon, tooye sec 112 (x) bazi in karo anjam bede va in mozo ro be har 2 taraf migam (req mizane ke openDoor man migam OK, hala tooye ws masalan baad az 1 sec ham zaman be har 2 taraf migam ke openDoor shod ) yani dar vaghe front az khodesh ghodrat tasmim giri nadare
+
+ye unit vaghti dare harekat mikone bayad per move ino check kone ke aya kasi tooye range esh hast ya na, ham bayad chap o rast ro check kone va ham bayad ro be ro va bala ro check kone , pas dar vaghe bayad be soorate ye mohite koravi doresho check kone va nazdik tarin ro sort kone va roosh lock kone ta oon unit ya tower az bein bere
+
+ye unit vaghti mibine ke jelosh pore say mikone ke bere samte chap ya rast va vaghti pos monaseb ro peida kard va tonest masalan bere chap, hala bayad dige tooye hamon masir be rahesh edame bede ta dobara jelosh por beshe ke in dafe faghat mitone bere chap masalan
+
+
