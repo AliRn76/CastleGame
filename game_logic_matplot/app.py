@@ -1,80 +1,151 @@
-import numpy as np
-import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d import Axes3D
-
-# Initialize
-fig = plt.figure()
-ax = plt.axes(projection='3d')
-ax.get_proj = lambda: np.dot(Axes3D.get_proj(ax), np.diag([1, .3, .3, 1]))
-ax.set_axis_off()
-X_MIN, X_MAX = 1, 11
-Y_MIN, Y_MAX = 0, 3
-Z_MIN, Z_MAX = 0, 3
-
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # Add Borders
-border_color = 'black'
-line_x_min = np.linspace(X_MIN, X_MIN, 100)
-line_y_min = np.linspace(Y_MIN, Y_MIN, 100)
-line_z_min = np.linspace(Z_MIN, Z_MIN, 100)
-
-line_x_max = np.linspace(X_MAX, X_MAX, 100)
-line_y_max = np.linspace(Y_MAX, Y_MAX, 100)
-line_z_max = np.linspace(Z_MAX, Z_MAX, 100)
-
-line_x = np.linspace(X_MIN, X_MAX    , 100)
-line_y = np.linspace(Y_MIN, Y_MAX, 100)
-line_z = np.linspace(Z_MIN, Z_MAX, 100)
-
-# Bottom
-ax.plot(line_x, line_y_min, line_z_min, color=border_color)
-ax.plot(line_x, line_y_max, line_z_min, color=border_color)
-ax.plot(line_x_min, line_y, line_z_min, color=border_color)
-ax.plot(line_x_max, line_y, line_z_min, color=border_color)
-
-# Top
-# ax.plot(line_x, line_y_min, line_z_max, color=border_color)
-# ax.plot(line_x, line_y_max, line_z_max, color=border_color)
-ax.plot(line_x_min, line_y, line_z_max, color=border_color)
-ax.plot(line_x_max, line_y, line_z_max, color=border_color)
-
-# Side
-ax.plot(line_x_min, line_y_min, line_z, color=border_color)
-ax.plot(line_x_min, line_y_max, line_z, color=border_color)
-ax.plot(line_x_max, line_y_min, line_z, color=border_color)
-ax.plot(line_x_max, line_y_max, line_z, color=border_color)
-
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # Set Towers
-alpha = .9
-axes = [12, 3, 3]
-data = np.ones(axes, dtype=np.bool)
-colors = np.empty(axes + [4], dtype=np.float32)
-
-for i in range(12):
-    colors[i] = [1, 0, 1, alpha]
-
-data[-1] = True
-data[-12] = True
-for i in range(2, 12):
-    data[-i] = False
-
-ax.voxels(data, facecolors=colors)
-
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # Set Archers
-archer1_x = [X_MIN - 0.5]
-archer2_x = [X_MAX + 0.5]
-archer_y = [(Y_MAX + Y_MIN) / 2]
-archer_z = [Z_MAX + 0.5]
-
-ax.scatter3D(archer1_x, archer_y, archer_z, s=70, color='green')
-ax.scatter3D(archer2_x, archer_y, archer_z, s=70, color='green')
-
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-plt.show()
-
-# TODO:
-#   1. Create Unit
-#   2. Move Unit in straight line
-#   3. Search for enemy in range
-#   4. Attack Enemy (Print Something till one of them die)
+import os
+from time import sleep
 
 
+RANGE_X = 10
+RANGE_Y = 3
+RANGE_Z = 3
+EMPTY = '-'
+
+board = [[[EMPTY for _ in range(RANGE_X)] for _ in range(RANGE_Y)] for _ in range(RANGE_Z)]
+database = []
+
+
+class Game:
+    @staticmethod
+    def print_board():
+        print(board)
+
+    @classmethod
+    def print_ground(cls):
+        os.system('clear')  # on Linux System
+
+        ground = board[0]
+        for row in ground:
+            for col in row:
+                print(col['character'] if isinstance(col, dict) else EMPTY, end=' ')
+            print()
+        print()
+
+        cls.print_units()
+
+    @staticmethod
+    def units():
+        return [unit['obj'] for unit in database]
+
+    @classmethod
+    def print_units(cls):
+        units = cls.units()
+        for u in units:
+            print(f'Unit: {u.name}\t\t HP: {u.hp}')
+
+    @classmethod
+    def remove_point(cls, *_point):
+        x, y, z = _point
+        board[z][y][x] = EMPTY
+        return _point
+
+
+class Unit(Game):
+    def __init__(self, x, y, z, hp, attack, range, speed, is_team1: bool, character='*'):
+        self._x = x if is_team1 else RANGE_X - x - 1
+        self._y = y
+        self._z = z
+        self._hp = hp
+        self._attack = attack
+        self._range = range if is_team1 else -range
+        self._speed = speed if is_team1 else -speed
+        self._character = character
+        self._team = is_team1
+        self._target = None
+        self.is_dead = False
+        self.set_unit(self._x, self._y, self._z)
+        self.name = id(self)
+
+    @property
+    def hp(self):
+        return self._hp
+
+    def has_target(self):
+        return bool(self._target)
+
+    def get_attacked(self, damage):
+        if self._hp <= damage:
+            print(f'{self.name} Just Died.')
+            self._hp = 0
+            self.died()
+        else:
+            self._hp -= damage
+
+    def died(self):
+        self.is_dead = True
+        for i in database:
+            if i['id'] == self.name:
+                del i
+        self.remove_point(self._x, self._y, self._z)
+
+    def attack(self):
+        if self._target.is_dead:
+            self._target = None
+        else:
+            self._target.get_attacked(self._attack)
+
+    def is_won(self):
+        if self._team:
+            return bool(self._x == RANGE_X-1)
+        else:
+            return bool(self._x == 0)
+
+    def set_target(self, _id):
+        for data in database:
+            if data['id'] == _id:
+                self._target = data['obj']
+
+    def move_straight(self) -> None:
+        self.remove_point(self._x, self._y, self._z)
+        self._x, self._y, self._z = self.set_unit(self._x + self._speed, self._y, self._z)
+
+    def is_enemy_in_range(self) -> bool:
+        __range = range(1, self._range) if self._range > 0 else range(self._range, -1)
+        for i in __range:
+            if board[self._z][self._y][self._x + i] is not EMPTY:
+                self.set_target(board[self._z][self._y][self._x + i]['id'])
+                return True
+            else:
+                return False
+
+    def set_unit(self, *_point) -> tuple:
+        x, y, z = _point
+        _data = {'character': self._character, 'hp': self._hp, 'id': id(self)}
+        board[z][y][x] = _data
+        return _point
+
+
+u1 = Unit(x=0, y=1, z=0, hp=100, attack=20, range=2, speed=1, is_team1=True)
+database.append({'id': u1.name, 'obj': u1})
+u2 = Unit(x=0, y=1, z=0, hp=100, attack=10, range=2, speed=1, is_team1=False)
+database.append({'id': u2.name, 'obj': u2})
+# u3 = Unit(x=0, y=2, z=0, hp=100, attack=20, range=2, speed=1, is_team1=False)
+# database.append({'id': u3.name, 'obj': u3})
+
+for i, d in enumerate(database):
+    print(f'Player {i}: {d["id"]}')
+
+
+nobody_wins = True
+while nobody_wins:
+    Game.print_ground()
+    sleep(.6)
+    for unit in Game.units():
+        if unit.is_dead:
+            del unit
+        else:
+            if unit.is_won():
+                print(f'Player {unit.name} Just Won The Game.')
+                nobody_wins = False
+                break
+
+            if unit.has_target() or unit.is_enemy_in_range():
+                unit.attack()
+            else:
+                unit.move_straight()
