@@ -149,3 +149,22 @@ while nobody_wins:
                 unit.attack()
             else:
                 unit.move_straight()
+
+# TODO:
+# [x]   1. Create Board
+# [x]   2. Create Unit
+# [x]   3. Move Unit
+# [x]   4. Move Unit Till Find First Enemy in Line
+# [x]   5. Stop & Attack Enemy
+# [x]   6. Move After Killing Enemy
+# [ ]   7. Find Enemy In Other Lines
+# [ ]   8. Set Action Time For Attack
+# [ ]   9. Find Measure For Speed And Range (board x = 1000, speed = 2, range = 50
+# [ ]   10. Change Line When It Couldn't Move In His Line (randomly left or right)
+# [ ]   11. Create Towers
+# [ ]   12. Tower Attack Units
+# [ ]   13. Unit Attack Towers
+# [ ]   14. User Wins After Destroyed Tower
+# [ ]   15. Add Air Units
+# [ ]   16. Find Air Enemies
+# [ ]   17. Attack Of Air Cards 
